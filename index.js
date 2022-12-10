@@ -2,10 +2,12 @@ import express from "express";
 import path from "path";
 import {getAuthorProfileData} from './services/parse-service.js';
 
+//initialize constants, port and the application 
 const __dirname = path.resolve();
 const PORT = process.env.PORT ?? 3000;
 const app = express();
 
+//initialize visual part files settings
 app.set('view engine', 'ejs');
 app.use(express.static(path.resolve(__dirname, 'static')));
 
@@ -32,15 +34,18 @@ const tutorsIds = [
 
 var authorsInfo = [];
 
+//filling the authorsInfo array
 tutorsIds.forEach(async id => {
     let info = await getAuthorProfileData(id); 
     authorsInfo.push(info);
 });
 
+//set the index file and dynamic variables
 app.get('/', (req, res) => {
     res.render('index', {authorsInfo: authorsInfo});
 });
 
+//starting the application
 app.listen(PORT, () => {
     console.log(`Server has been started on port ${PORT}...`);
 });
